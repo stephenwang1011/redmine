@@ -23,8 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import com.incito.redmine.util.BarProgress;
 import com.incito.redmine.util.ChooseFile;
+import com.incito.redmine.util.ConditionalsAfterClick;
 
 public class Count extends JFrame {
 
@@ -97,7 +97,7 @@ public class Count extends JFrame {
 		filePathText.setBounds(83, 8, 249, 21);
 		panel.add(filePathText);
 		filePathText.setColumns(10);
-		ButtonGroup group = new ButtonGroup();
+		final ButtonGroup group = new ButtonGroup();
 		final JRadioButton radioButton = new JRadioButton("物流标准板");
 		radioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -173,12 +173,8 @@ public class Count extends JFrame {
 		JButton btnNewButton = new JButton("统计");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-					Thread stepper = new BarProgress(progressBar);
-			        stepper.start();
-			        System.out.println("文件："+filePathText.getText());
-				
-				
+				ConditionalsAfterClick.judge(filePathText,group , progressBar);
+		
 			}
 		});
 		btnNewButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
