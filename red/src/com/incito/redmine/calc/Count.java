@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,13 +17,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
-import javax.swing.filechooser.FileFilter;
 
-import com.incito.redmine.util.chooseFile;
+import com.incito.redmine.util.BarProgress;
+import com.incito.redmine.util.ChooseFile;
 
 public class Count extends JFrame {
 
@@ -52,17 +54,7 @@ public class Count extends JFrame {
 			}
 		});
 	}
-	//定义文件选择器
-	class ExcelFileFilter extends FileFilter {  
-	    public String getDescription() {  
-	        return "*.xls;*.xlsx";  
-	    }  
-	  
-	    public boolean accept(File file) {  
-	        String name = file.getName();  
-	        return file.isDirectory() || name.toLowerCase().endsWith(".xls") || name.toLowerCase().endsWith(".xlsx");  // 仅显示目录和xls、xlsx文件
-	    }  
-	}  
+
 
 	/**
 	 * Create the frame.
@@ -80,25 +72,28 @@ public class Count extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		JPanel panel = new JPanel();
+		final JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.scrollbar);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
+		//文件路径label
 		JLabel filePathLabel = new JLabel("文件路径：");
 		filePathLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		filePathLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		filePathLabel.setBounds(10, 10, 70, 15);
 		filePathLabel.setVerticalAlignment(SwingConstants.TOP);
 		panel.add(filePathLabel);
-		
+		//文件路径显示的区域
 		filePathText = new JTextField();
+		filePathText.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		filePathText.setEditable(false);
 		filePathText.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				chooseFile.choose(file, filePathText);
+				ChooseFile.choose(file, filePathText);
 			}
 		});
-		filePathText.setToolTipText("");
+		filePathText.setToolTipText("这是文件路径");
 		filePathText.setBounds(83, 8, 249, 21);
 		panel.add(filePathText);
 		filePathText.setColumns(10);
@@ -155,7 +150,7 @@ public class Count extends JFrame {
 		button.addActionListener(new ActionListener()  {
 			public void actionPerformed(ActionEvent e)  {
 			
-				chooseFile.choose(file, filePathText);
+				ChooseFile.choose(file, filePathText);
 				
 				
 			}
@@ -165,12 +160,28 @@ public class Count extends JFrame {
 		button.setBounds(348, 7, 79, 23);
 		panel.add(button);
 		
+		final JProgressBar progressBar = new JProgressBar(0,100);
+		progressBar.setForeground(new Color(255, 0, 0));
+		progressBar.setStringPainted(true); // 显示百分比字符
+		progressBar.setIndeterminate(false); // 不确定的进度条
+		progressBar.setBackground(new Color(144, 238, 144));
+		progressBar.setToolTipText("统计进度");
+		progressBar.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		progressBar.setBounds(83, 77, 257, 14);
+		panel.add(progressBar);
+		
 		JButton btnNewButton = new JButton("统计");
-		btnNewButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+					Thread stepper = new BarProgress(progressBar);
+			        stepper.start();
+			        System.out.println("文件："+filePathText.getText());
+				
+				
 			}
 		});
+		btnNewButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		btnNewButton.setBounds(83, 105, 93, 23);
 		panel.add(btnNewButton);
 		
@@ -181,7 +192,7 @@ public class Count extends JFrame {
 			}
 		});
 		btnNewButton_1.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		btnNewButton_1.setBounds(239, 105, 93, 23);
+		btnNewButton_1.setBounds(247, 105, 93, 23);
 		panel.add(btnNewButton_1);
 		
 		JLabel label = new JLabel("项目选择：");
@@ -201,6 +212,10 @@ public class Count extends JFrame {
 		textField.setBounds(56, 138, 334, 21);
 		panel.add(textField);
 		textField.setColumns(10);
+		
+
+		
+
 
 		
 	}

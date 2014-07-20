@@ -6,7 +6,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class chooseFile {
+public class ChooseFile {
 	public static void choose(File file,JTextField jtf){
 		
 		 JFileChooser jfc=new JFileChooser();  
